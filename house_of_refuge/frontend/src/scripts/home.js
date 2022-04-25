@@ -16,7 +16,6 @@ import { colors } from '../theme';
 import Share from '../pages/Share';
 import Find from '../pages/Find';
 import CMS from "../components/CMS";
-import Map from "../components/Map";
 import {ToastContainer} from "react-toastify";
 import '../i18n/config';
 
@@ -63,8 +62,9 @@ const App = (props) => {
               <BigButton
                   primaryText="Udostępniam nocleg"
                   secondaryText="Можу надати житло"
-                  backgroundColor="#0066cc"
-                  color={colors.white}
+                  outlined={true}
+                  color={colors.grey}
+                  backgroundColor={colors.optimisticYellow}
               />
             </Link>
             <Link to="/find">
@@ -72,16 +72,7 @@ const App = (props) => {
                   primaryText="Потребує житло"
                   secondaryText="Szukam noclegu"
                   color={colors.veryDarkGrey}
-                  backgroundColor={colors.optimisticYellow}
-              />
-            </Link>
-            <div className={"w-100 my-3"}/>
-            <Link to="/map">
-              <BigButton
-                  primaryText="Хочу поїхати в іншу країну в Європі"
-                  secondaryText="Chcę jechać do innego kraju w Europie"
-                  outlined
-                  color={colors.veryDarkGrey}
+                  outlined={true}
               />
             </Link>
           </ButtonWrap>
@@ -101,7 +92,6 @@ const App = (props) => {
         </>} />
         <Route path="/edit" element={<Edit {...props} />} />
         <Route path="/page/:id" element={<CMS {...props} />} />
-        <Route path="/map" element={<Map {...props} />} />
       </Routes>
     </StyledApp>
   );

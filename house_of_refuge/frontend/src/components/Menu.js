@@ -123,13 +123,13 @@ const Menu = () => {
 
 
         </MiniMenu>}
-        <ExtrernalLink
-            target="_blank"
-            rel="noopener noreferrer"
-            href="https://www.facebook.com/groups/zasobygrupa"
-        >
-          <LogoFB/>
-        </ExtrernalLink>
+        {/*<ExtrernalLink*/}
+        {/*    target="_blank"*/}
+        {/*    rel="noopener noreferrer"*/}
+        {/*    href="https://www.facebook.com/groups/zasobygrupa"*/}
+        {/*>*/}
+        {/*  <LogoFB/>*/}
+        {/*</ExtrernalLink>*/}
       </>
   );
 };
