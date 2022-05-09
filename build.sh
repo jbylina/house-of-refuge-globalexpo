@@ -12,12 +12,5 @@ npm run build --prefix house_of_refuge/frontend
 python manage.py collectstatic --no-input
 python manage.py migrate
 
-# debug
-printenv
-pwd
-ls -la
-ls -la config || true
-python -c "import config"
-python -c "import importlib; importlib.import_module('config')"
-
+export PYTHONPATH="${PYTHONPATH}:${PWD}"
 django-admin compilemessages
