@@ -18,7 +18,7 @@ services:
     name: zasoby
     env: python
     region: frankfurt
-    branch: production
+    branch: master
     healthCheckPath: /healthz
     buildCommand: "./build.sh"
     startCommand: "NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program gunicorn config.wsgi:application -t 60"
