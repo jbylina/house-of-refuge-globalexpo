@@ -333,9 +333,11 @@ const Form = ({
                             }
                             {field.type === 'checkbox' &&
                                 <>
-                                    <Label type="checkbox" htmlFor={field.name}>{i18n.exists(field.name) ? tr(field.name) : field.label}</Label>
-                                    {i18n.exists('forms:' + field.name + '_subHeading') &&
-                                        <SubHeading indent> {tr(field.name + '_subHeading', field.subHeading)}</SubHeading>}
+                                    <Label type="checkbox" htmlFor={field.name}>
+                                        {i18n.exists(field.name) ? tr(field.name) : field.label}
+                                        {i18n.exists('forms:' + field.name + '_subHeading') || field.subHeading &&
+                                            <SubHeading> {tr(field.name + '_subHeading', field.subHeading)}</SubHeading>}
+                                    </Label>
                                 </>
                             }
                             {formik.errors[field.name] && formik.touched[field.name] &&
