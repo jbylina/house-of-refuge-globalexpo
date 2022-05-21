@@ -28,7 +28,7 @@ class HousingType(models.TextChoices):
     HOUSE = "house", _("House")
     FLAT = "flat", _("Apartment")
     ROOM = "room", _("Room")
-    SOFA = "sofa", _("Sofat")
+    SOFA = "sofa", _("Sofa")
 
 
 # class TransportRange(models.TextChoices):
@@ -81,20 +81,42 @@ class HousingResource(TimeStampedModel):
     )
     description = models.TextField(
         max_length=2048,
+        default="",
+        blank=True,
         verbose_name=_("Something about accommodation"),
         help_text=_("who do you live with (if you'll host at your place)?, some rules about place? "),
     )
-    resource = models.CharField(
-        choices=HousingType.choices,
-        max_length=1024,
-        verbose_name=_("Resource"),
+    # resource = models.CharField(
+    #     choices=HousingType.choices,
+    #     max_length=1024,
+    #     verbose_name=_("Resource"),
+    # )
+    house = models.BooleanField(
+        default=False,
+        verbose_name=_("House"),
+    )
+    flat = models.BooleanField(
+        default=False,
+        verbose_name=_("Flat"),
+    )
+    room = models.BooleanField(
+        default=False,
+        verbose_name=_("Room"),
+    )
+    sofa = models.BooleanField(
+        default=False,
+        verbose_name=_("Room"),
     )
     city = models.CharField(
         max_length=30,
+        default='',
+        null=False,
+        blank=False,
         verbose_name=_("City and zip code"),
     )
     country = models.CharField(
         max_length=30,
+        null=True,
         verbose_name=_("Country"),
     )
     postal_code = models.CharField(
@@ -297,18 +319,22 @@ class HousingResource(TimeStampedModel):
             id=self.id,
             token=self.token,
             name=self.name,
-            resource=self.resource,
+            #resource=self.resource,
+            house=self.house,
+            flat=self.flat,
+            room=self.room,
+            sofa=self.sofa,
             postal_code=self.postal_code,
             city=self.city,
             address=self.address,
             people_to_accommodate=self.how_many_people,
             when_to_call=self.phone_when,
             costs=self.costs,
-            availability=self.how_many_people,
+            availability=self.date,
             accommodation_length=extract_number_from_string(
                 self.how_long, default=0) or self.how_long,
             details=self.details,
-            transport=self.transport,
+            transport=self.transport_desc,
             living_with_pets=self.pets,
             can_take_person_with_pets=self.can_live_with_pets,
             phone_number=get_phone_number_display(self.phone),
@@ -328,28 +354,31 @@ class HousingResource(TimeStampedModel):
         return dict(
             id=self.id,
             name=self.name,
-            resource=self.resource,
+            #resource=self.resource,
+            house=self.house,
+            flat=self.flat,
+            room=self.room,
+            sofa=self.sofa,
             postal_code=self.postal_code,
             city=self.city,
             address=self.address,
             full_address=self.full_address,
-            people_to_accommodate=self.self.how_many_people,
+            people_to_accommodate=self.how_many_people,
             costs=self.costs,
-            availability=self.how_many_people,
+            availability=self.date,
             accommodation_length=self.how_long,
             details=self.details,
-            transport=self.transport,
+            transport=self.transport_desc,
             phone_number=get_phone_number_display(self.phone),
-            backup_phone_number=get_phone_number_display(self.backup_phone_number),
-            will_pick_up_now=self.will_pick_up_now,
+            will_pick_up_now=self.transport,
             extra=self.extra,
             status=self.status,
             cherry=self.cherry,
             turtle=self.turtle,
             verified=self.verified,
-            when_to_call=self.when_to_call,
-            living_with_pets=self.living_with_pets,
-            can_take_person_with_pets=self.can_take_person_with_pets,
+            when_to_call=self.phone_when,
+            living_with_pets=self.pets,
+            can_take_person_with_pets=self.can_live_with_pets,
             is_dropped=self.is_dropped,
             is_ready=self.is_actively_ready,
             is_hot=self.is_dropped or self.is_actively_ready,
