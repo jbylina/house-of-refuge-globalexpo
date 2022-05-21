@@ -225,10 +225,10 @@ export const fields2 = [
         type: 'text'
     },
     {
-        name: 'people_desc',
+        name: 'people_nb',
         label: 'Kількість осіб',
         subHeading: 'Liczba osób / Number of people',
-        type: 'none'
+        type: 'number'
     },
     {
         name: 'women',

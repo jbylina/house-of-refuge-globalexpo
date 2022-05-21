@@ -153,7 +153,7 @@ class HousingResource(TimeStampedModel):
     )
     date = models.DateField(
         default=timezone.now,
-        verbose_name=_("Availability"),
+        verbose_name=_("Registration date"),
         help_text=_("When can you start providing the accommodation?"),
     )
     how_long = models.CharField(
@@ -437,14 +437,26 @@ class SubmissionManager(Manager):
 
 
 class Submission(TimeStampedModel):
+    #
     name = models.CharField(
         max_length=512,
         null=False,
         verbose_name=_("Full name"),
     )
-    phone_number = models.CharField(
+    #
+    registration_date = models.DateField(
+        default=timezone.now,
+        verbose_name=_("Registration date"),
+    )
+    #
+    phone_number_pl = models.CharField(
         max_length=128,
-        verbose_name=_("Phone number"),
+        verbose_name=_("Polish phone number"),
+    )
+    #
+    phone_number_ukr = models.CharField(
+        max_length=128,
+        verbose_name=_("Ukrainian phone number"),
     )
     people = models.CharField(
         max_length=128,
@@ -462,11 +474,12 @@ class Submission(TimeStampedModel):
             "their relationships (family, friends?), "
             "indicate whether it can be broken into smaller groups"),
         )
-    origin = models.CharField(
+    #
+    city_of_origin = models.CharField(
         max_length=512,
         blank=True,
         default="",
-        verbose_name=_("Nationality"),
+        verbose_name=_("City of your origin"),
     )
     traveling_with_pets = models.CharField(
         max_length=1024,
@@ -487,12 +500,29 @@ class Submission(TimeStampedModel):
         blank=True,
         verbose_name=_("Contact person"),
     )
-    languages = models.CharField(
+    #
+    languages_others = models.CharField(
         max_length=1024,
         null=True,
         blank=True,
-        verbose_name=_("Languages"),
-        help_text=_("Languages that the person speaks"),
+        verbose_name=_("Other languages"),
+        help_text=_("Other languages that the person speaks. "
+                    "Other then Polish, Ukrainian and Russian"),
+    )
+    #
+    languages_ru = models.BooleanField(
+        default=False,
+        verbose_name=_("Russian"),
+    )
+    #
+    languages_pl = models.BooleanField(
+        default=False,
+        verbose_name=_("Polish"),
+    )
+    #
+    languages_en = models.BooleanField(
+        default=False,
+        verbose_name=_("English"),
     )
     when = models.DateField(
         default=timezone.now,
