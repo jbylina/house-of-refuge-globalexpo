@@ -437,102 +437,172 @@ class SubmissionManager(Manager):
 
 
 class Submission(TimeStampedModel):
-    #
     name = models.CharField(
         max_length=512,
         null=False,
         verbose_name=_("Full name"),
     )
-    #
     registration_date = models.DateField(
         default=timezone.now,
         verbose_name=_("Registration date"),
     )
-    #
     phone_number_pl = models.CharField(
+        null=False,
+        blank=False,
+        default='',
         max_length=128,
         verbose_name=_("Polish phone number"),
     )
-    #
     phone_number_ukr = models.CharField(
+        null=True,
+        blank=True,
         max_length=128,
         verbose_name=_("Ukrainian phone number"),
     )
-    people = models.CharField(
-        max_length=128,
+    people_nb = models.IntegerField(
+        default=1,
         verbose_name=_("The number of people"),
     )
-    how_long = models.CharField(
-        max_length=128,
-        verbose_name=_("Length of stay"),
-        help_text=_("For how long (in days)?"),
-    )
-    description = models.CharField(
+    women = models.TextField(
         max_length=2048,
-        verbose_name=_("Description"),
-        help_text=_("Describe the group, age of every person, "
-            "their relationships (family, friends?), "
-            "indicate whether it can be broken into smaller groups"),
-        )
-    #
+        default="",
+        blank=True,
+        verbose_name=_("Women age"),
+    )
+    men = models.TextField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Men age"),
+    )
+    children = models.TextField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Children age"),
+    )
     city_of_origin = models.CharField(
         max_length=512,
         blank=True,
         default="",
         verbose_name=_("City of your origin"),
     )
-    traveling_with_pets = models.CharField(
-        max_length=1024,
-        null=True,
-        blank=True,
-        verbose_name=_("Traveling with pets"),
+    disable = models.BooleanField(
+        default=False,
+        verbose_name=_("Disabilities"),
+        help_text=("Anyone with a disability or chronic diseases")
     )
-    can_stay_with_pets = models.CharField(
-        max_length=512,
-        null=True,
+    disable_desc = models.TextField(
+        max_length=2048,
+        default="",
         blank=True,
-        verbose_name=_("Can stay with pets"),
-        help_text=_("Can the person stay with pets (e.g., due to allergies)?"),
-    )  # does this need a dropdown on the frontend?
-    contact_person = models.CharField(
-        max_length=1024,
-        null=True,
-        blank=True,
-        verbose_name=_("Contact person"),
+        verbose_name=_("Kind of disability"),
     )
-    #
+    pregnant = models.BooleanField(
+        default=False,
+        verbose_name=_("Pregnant"),
+    )
+    pet = models.BooleanField(
+        default=False,
+        verbose_name=_("Pets"),
+    )
+    pet_desc = models.TextField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        verbose_name=_("What kind of animal"),
+    )
+    pet_alergic = models.BooleanField(
+        default=False,
+        verbose_name=_("Animal allergies"),
+    )
     languages_others = models.CharField(
         max_length=1024,
         null=True,
         blank=True,
         verbose_name=_("Other languages"),
-        help_text=_("Other languages that the person speaks. "
-                    "Other then Polish, Ukrainian and Russian"),
+        help_text=_("Other languages that the person speaks besides Polish, Ukrainian and Russian"),
     )
-    #
     languages_ru = models.BooleanField(
         default=False,
         verbose_name=_("Russian"),
     )
-    #
     languages_pl = models.BooleanField(
         default=False,
         verbose_name=_("Polish"),
     )
-    #
     languages_en = models.BooleanField(
         default=False,
         verbose_name=_("English"),
     )
-    when = models.DateField(
+    preferred_country = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True,
+        verbose_name=_("Preferred country"),
+    )
+    preferred_city = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True,
+        verbose_name=_("Preferred city"),
+    )
+    how_long_date = models.DateField(
         default=timezone.now,
         null=True,
         blank=True,
         verbose_name=_("Since when the support is needed"),
     )
-    transport_needed = models.BooleanField(
+    how_long_desc = models.TextField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        verbose_name=_("Description"),
+    )
+    how_long_months = models.IntegerField(
+        default=0,
+        blank=True,
+        verbose_name=_("How many months?"),
+    )
+    how_long_infinite = models.BooleanField(
+        default=False,
+        verbose_name=_("Without ending date"),
+    )
+    can_pay = models.BooleanField(
+        default=False,
+        verbose_name=_("Is the payment possible?"),
+    )
+    can_pay_pln = models.FloatField(
+        default=0,
+        blank=True,
+        max_length=128,
+        verbose_name=_("Monthly payment in PLN"),
+    )
+    cigarettes = models.BooleanField(
+        default=False,
+        verbose_name=_("Does anyone smokes cigarettes?"),
+    )
+    job_needed = models.BooleanField(
+        default=False,
+        verbose_name=_("Do you want to work?"),
+    )
+    job_desc = models.TextField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        verbose_name=_("In what kind of job are you interested in?"),
+    )
+    car = models.BooleanField(
         default=True,
-        verbose_name=_("Transport needed"),
+        verbose_name=_("Do you have a car?"),
+    )
+    stamps = models.BooleanField(
+        default=True,
+        verbose_name=_("Do you have polish border stamps?"),
+    )
+    pesel = models.BooleanField(
+        default=True,
+        verbose_name=_("Do you have polish pesel?"),
     )
     # following fields are for logged in users
     note = models.CharField(
@@ -647,12 +717,19 @@ class Submission(TimeStampedModel):
 
     @property
     def people_as_int(self):
-        return extract_number_from_string(self.people, default=1)
+        return extract_number_from_string(self.people_nb, default=1)
 
     @property
     def accomodation_in_the_future(self):
-        if self.when:
-            when = self.when.date() if isinstance(self.when, datetime.datetime) else self.when
+        """
+        Is is assumed that an accommodation is needed from the day of registration
+        """
+        # if self.when:
+        #     when = self.when.date() if isinstance(self.when, datetime.datetime) else self.when
+        #     return when > get_our_today_cutoff()
+        if self.registration_date:
+            when = self.registration_date.date() if isinstance(self.registration_date, datetime.datetime) \
+                else self.registration_date
             return when > get_our_today_cutoff()
         return False
 
@@ -688,8 +765,7 @@ class Submission(TimeStampedModel):
         first_match = self.first_matched_date
         return dict(
             id=self.id,
-            created=self.created.astimezone(timezone.get_default_timezone()),
-            created_hour=self.created.astimezone(timezone.get_default_timezone()).hour,
+            created=self.registration_date,
             status=self.status,
             finished_at=self.finished_at,
             finished_day=get_our_today_cutoff(self.finished_at) if self.finished_at else None,
@@ -723,35 +799,47 @@ class Submission(TimeStampedModel):
         self.save()
 
     def as_prop(self):
-        try:
-            created = self.created.astimezone(timezone.get_default_timezone()).strftime("%-d %B %H:%M:%S")
-        except ValueError:
-            created = str(self.created.astimezone(timezone.get_default_timezone()))
         return dict(
             id=self.id,
-            created=created,
+            created=self.registration_date,
             name=self.name,
-            phone_number=get_phone_number_display(self.phone_number),
-            people=self.people,
-            people_count=str(self.people_as_int),
-            description=self.description,
-            how_long=self.how_long,
-            languages=self.languages,
+            phone_number_pl=get_phone_number_display(self.phone_number_pl),
+            phone_number_ukr=get_phone_number_display(self.phone_number_ukr),
+            people_number=str(self.people_nb),
+            women_age=self.women,
+            man_age=self.men,
+            pregnant=self.pregnant,
+            children_age=self.children,
+            how_long_date=self.how_long_date,
+            how_long_desc=self.how_long_desc,
+            how_long_months=self.how_long_months,
+            how_long_infinite=self.how_long_infinite,
+            languages_ru=self.languages_ru,
+            languages_pl=self.languages_pl,
+            languages_en=self.languages_en,
+            languages_others=self.languages_others,
             source=self.source,
             priority=self.priority,
-            when=self.when,
-            contact_person=self.contact_person,
-            transport_needed=self.transport_needed,
             receiver=self.receiver.as_json() if self.receiver else None,
             coordinator=self.coordinator.as_json() if self.coordinator else None,
             matcher=self.matcher.as_json() if self.matcher else None,
             note=self.note,
             accomodation_in_the_future=self.accomodation_in_the_future,
             status=self.status,
-            origin=self.origin,
-            is_today=get_our_today_cutoff(self.created) >= get_our_today_cutoff(),
-            traveling_with_pets=self.traveling_with_pets,
-            can_stay_with_pets=self.can_stay_with_pets,
+            city_of_origin=self.city_of_origin,
+            disable=self.disable,
+            disable_description=self.disable_desc,
+            traveling_with_pets=self.pet,
+            pets_description=self.pet_desc,
+            pet_alergic=self.pet_alergic,
+            can_pay=self.can_pay,
+            can_pay_pln=self.can_pay_pln,
+            cigarettes=self.cigarettes,
+            job_needed=self.job_needed,
+            job_desc=self.job_desc,
+            car=self.car,
+            stamps=self.stamps,
+            pesel=self.pesel,
             resource=self.resource.sub_representation() if self.resource else None,
         )
 

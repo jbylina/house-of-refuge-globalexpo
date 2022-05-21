@@ -79,10 +79,9 @@ class SubmissionRow(resources.ModelResource):
 @admin.register(Submission)
 class SubmissionAdmin(ImportExportModelAdmin, ImportExportActionModelAdmin):
     resource_class = SubmissionRow
-    search_fields = ("id", "name", "languages", "phone_number","receiver__name", "coordinator__name", "note", "contact_person", "matcher__name")
-    list_display = ("id", "name", "people","how_long",
-                    "contact_person", "description",
-                    "note", "source", "status",)
+    search_fields = ("id", "name", "languages", "phone_number_pl", "receiver__name", "coordinator__name", "note",
+                     "matcher__name")
+    list_display = ("id", "name", "people_nb", "how_long_months", "note", "source", "status",)
     list_filter = ("status", "source", "should_be_deleted")
     list_editable = ("status", "source", "note")
     autocomplete_fields = ['resource', 'matcher', 'coordinator', 'receiver']
