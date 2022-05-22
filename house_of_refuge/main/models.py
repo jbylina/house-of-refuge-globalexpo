@@ -433,7 +433,7 @@ class SubmissionManager(Manager):
             cut_off = now.replace(hour=END_OF_DAY, minute=0, second=0)
         else:
             cut_off = now.replace(day=now.day - 1, hour=END_OF_DAY, minute=0, second=0)
-        return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS).only("people")
+        return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS).only("people_nb")
 
 
 class Submission(TimeStampedModel):
@@ -683,7 +683,7 @@ class Submission(TimeStampedModel):
     objects = SubmissionManager()
 
     def __str__(self):
-        return f"{self.id} {self.name} {self.people} na {self.how_long}"
+        return f"{self.id} {self.name} {self.people_nb} na {self.how_long_months}"
 
     class Meta:
         verbose_name = _("Submission")
@@ -797,6 +797,39 @@ class Submission(TimeStampedModel):
             timezone.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
         self.save()
+
+    # def as_prop(self):
+    #     try:
+    #         created = self.created.astimezone(timezone.get_default_timezone()).strftime("%-d %B %H:%M:%S")
+    #     except ValueError:
+    #         created = str(self.created.astimezone(timezone.get_default_timezone()))
+    #     return dict(
+    #         id=self.id,
+    #         created=created,
+    #         name=self.name,
+    #         phone_number=self.phone_number_pl,
+    #         people=self.people_nb,
+    #         people_count=str(self.people_nb),
+    #         description="",
+    #         how_long=self.how_long_months,
+    #         languages=self.languages_others,
+    #         source=self.source,
+    #         priority=self.priority,
+    #         when=self.registration_date,
+    #         contact_person="",
+    #         transport_needed=self.car,
+    #         receiver=self.receiver.as_json() if self.receiver else None,
+    #         coordinator=self.coordinator.as_json() if self.coordinator else None,
+    #         matcher=self.matcher.as_json() if self.matcher else None,
+    #         note=self.note,
+    #         accomodation_in_the_future=self.accomodation_in_the_future,
+    #         status=self.status,
+    #         origin=self.city_of_origin,
+    #         is_today=get_our_today_cutoff(self.created) >= get_our_today_cutoff(),
+    #         traveling_with_pets=self.pet,
+    #         can_stay_with_pets=self.pet_alergic,
+    #         resource=self.resource.sub_representation() if self.resource else None,
+    #     )
 
     def as_prop(self):
         return dict(
