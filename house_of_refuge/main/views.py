@@ -40,7 +40,6 @@ def housing_list(request):
         sub.people_as_int
         for sub in Submission.objects.for_happy_message()
     ])
-
     return render(
         request, "main/housing_list.html", {"props": dict(
             initialResources=[],
