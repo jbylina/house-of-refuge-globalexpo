@@ -914,8 +914,8 @@ class Submission(TimeStampedModel):
             status=self.status,
             origin=self.city_of_origin,
             is_today=get_our_today_cutoff(self.created) >= get_our_today_cutoff(),
-            traveling_with_pets=self.pet,
-            can_stay_with_pets=self.pet_alergic,
+            traveling_with_pets='tak' if self.pet else 'nie',
+            can_stay_with_pets= 'tak' if self.pet_alergic else 'nie',
             resource=self.resource.sub_representation() if self.resource else None,
         )
 
