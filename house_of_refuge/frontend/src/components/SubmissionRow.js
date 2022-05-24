@@ -157,7 +157,7 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         Zwiń / Rozwiń
       </div>
     </div>
-    <Table className="sub-table" style={{'background-color': 'rgba(255, 255, 255, 0.95)', display: collapsed ? 'none' : 'table'}}>
+    <Table className="sub-table" style={{'backgroundColor': 'rgba(255, 255, 255, 0.95)', display: collapsed ? 'none' : 'table'}}>
       <tbody>
       <tr>
         <th>Imie</th>

@@ -30,7 +30,7 @@ export const EditableField = ({value, classes = '', noEditClasses = '', onRename
                       placeholder={t('add_note')}
                       onChange={(e) => setCurrentValue(e.target.value)}
                       onKeyDown={keyUpHandler}/></div> : <div className="rename-input" onClick={() => setEditable(true)}>
-    <span className={value ? "" : "text-muted"}>{value.trim() || t('click_to_add_note')}</span>
+    <span className={value ? "" : "text-muted"}>{(value && value.trim()) || t('click_to_add_note')}</span>
   </div>);
 
 };
