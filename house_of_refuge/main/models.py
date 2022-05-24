@@ -886,6 +886,18 @@ class Submission(TimeStampedModel):
         )
         self.save()
 
+    @property
+    def languages(self):
+        str_ = ''
+        if self.languages_ru:
+            str_ += 'Rosyjski '
+        if self.languages_pl:
+            str_ += "Polski "
+        if self.languages_en:
+            str_+= "Angielski "
+        str_ += self.languages_others
+        return str_
+
     def as_prop(self):
         try:
             created = self.created.astimezone(timezone.get_default_timezone()).strftime("%-d %B %H:%M:%S")
@@ -900,7 +912,7 @@ class Submission(TimeStampedModel):
             people_count=str(self.people_nb),
             description="",
             how_long=str(self.how_long_months),
-            languages=self.languages_others,
+            languages=self.languages,
             source=self.source,
             priority=self.priority,
             when=self.registration_date,
@@ -915,7 +927,7 @@ class Submission(TimeStampedModel):
             origin=self.city_of_origin,
             is_today=get_our_today_cutoff(self.created) >= get_our_today_cutoff(),
             traveling_with_pets='tak' if self.pet else 'nie',
-            can_stay_with_pets= 'tak' if self.pet_alergic else 'nie',
+            can_stay_with_pets='tak' if self.pet_alergic else 'nie',
             resource=self.resource.sub_representation() if self.resource else None,
         )
 
