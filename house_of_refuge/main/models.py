@@ -390,6 +390,7 @@ class HousingResource(TimeStampedModel):
             will_pick_up_now=self.transport,
             job=self.job,
             job_descr=self.job_descr,
+            food=self.food,
             extra=self.extra,
             status=self.status,
             cherry=self.cherry,
