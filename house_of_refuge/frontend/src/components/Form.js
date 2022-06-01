@@ -160,10 +160,12 @@ const Form = ({
                 city_and_zip_code: `${values.city}, ${values.zip_code}`,
             };
 
+            const data = values.city && values.zip_code ? cityZipCodeValues : values;
+
             const request = {
                 method: formData ? 'put' : 'post',
                 url,
-                data: values.city && values.zip_code ? cityZipCodeValues : values,
+                data: data,
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken'),
@@ -266,7 +268,7 @@ const Form = ({
                                       type={field.type}>
                             {(field.type !== 'hidden' && field.type !== 'checkbox') &&
                                 <>
-                                    <Label htmlFor={field.name}>{tr(field.name)}</Label>
+                                    <Label htmlFor={field.name}>{i18n.exists(field.name) ? tr(field.name) : field.label}</Label>
                                     {(i18n.exists('forms:' + field.name + '_subHeading') || field.subHeading) &&
                                         <SubHeading> {tr(field.name + '_subHeading', field.subHeading)}</SubHeading>}
                                 </>
@@ -331,9 +333,11 @@ const Form = ({
                             }
                             {field.type === 'checkbox' &&
                                 <>
-                                    <Label type="checkbox" htmlFor={field.name}>{tr(field.name)}</Label>
-                                    {i18n.exists('forms:' + field.name + '_subHeading') &&
-                                        <SubHeading indent> {tr(field.name + '_subHeading', field.subHeading)}</SubHeading>}
+                                    <Label type="checkbox" htmlFor={field.name}>
+                                        {i18n.exists(field.name) ? tr(field.name) : field.label}
+                                        {i18n.exists('forms:' + field.name + '_subHeading') || field.subHeading &&
+                                            <SubHeading> {tr(field.name + '_subHeading', field.subHeading)}</SubHeading>}
+                                    </Label>
                                 </>
                             }
                             {formik.errors[field.name] && formik.touched[field.name] &&

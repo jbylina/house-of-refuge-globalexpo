@@ -25,17 +25,16 @@ User = get_user_model()
 
 
 class HousingType(models.TextChoices):
-    HOME = "home", _("House")
+    HOUSE = "house", _("House")
     FLAT = "flat", _("Apartment")
     ROOM = "room", _("Room")
-    COUCH = "couch", _("Couch")
-    MATTRESS = "mattress", _("Mattress")
+    SOFA = "sofa", _("Sofa")
 
 
-class TransportRange(models.TextChoices):
-    WARSAW = "warsaw", _("Warsaw")
-    POLAND = "poland", _("Poland")
-    NONE = "none", _("None")
+# class TransportRange(models.TextChoices):
+#     WARSAW = "warsaw", _("Warsaw")
+#     POLAND = "poland", _("Poland")
+#     NONE = "none", _("None")
 
 
 class Status(models.TextChoices):
@@ -80,21 +79,47 @@ class HousingResource(TimeStampedModel):
         null=False,
         verbose_name=_("Full name"),
     )
-    about_info = models.TextField(
+    description = models.TextField(
         max_length=2048,
-        verbose_name=_("Something about you"),
-        help_text=_("how old are you? who do you live with (if you'll host at your place)?"),
+        default="",
+        blank=True,
+        verbose_name=_("Something about accommodation"),
+        help_text=_("who do you live with (if you'll host at your place)?, some rules about place? "),
     )
-    resource = models.CharField(
-        choices=HousingType.choices,
-        max_length=1024,
-        verbose_name=_("Resource"),
+    # resource = models.CharField(
+    #     choices=HousingType.choices,
+    #     max_length=1024,
+    #     verbose_name=_("Resource"),
+    # )
+    house = models.BooleanField(
+        default=False,
+        verbose_name=_("House"),
     )
-    city_and_zip_code = models.CharField(
-        max_length=512,
+    flat = models.BooleanField(
+        default=False,
+        verbose_name=_("Flat"),
+    )
+    room = models.BooleanField(
+        default=False,
+        verbose_name=_("Room"),
+    )
+    sofa = models.BooleanField(
+        default=False,
+        verbose_name=_("Room"),
+    )
+    city = models.CharField(
+        max_length=30,
+        default='',
+        null=False,
+        blank=False,
         verbose_name=_("City and zip code"),
     )
-    zip_code = models.CharField(
+    country = models.CharField(
+        max_length=30,
+        null=True,
+        verbose_name=_("Country"),
+    )
+    postal_code = models.CharField(
         max_length=8,
         verbose_name=_("Zip code"),
     )
@@ -103,87 +128,79 @@ class HousingResource(TimeStampedModel):
         verbose_name=_("Address"),
         help_text=_("street, building number, appartment number"),
     )
-    people_to_accommodate_raw = models.CharField(
+    people_desc = models.CharField(
         max_length=1024,
         blank=True,
         default="",
         verbose_name=_("Max number of people to accomodate"),
         help_text=_("How many people can you support while providing them adequate living conditions?"),
     )
-    people_to_accommodate = models.IntegerField(
+    how_many_people = models.IntegerField(
         default=0,
         verbose_name=_("Max number of people to accomodate"),
         help_text=_("How many people can you support while providing them adequate living conditions?"),
     )
-    age = models.CharField(
-        max_length=512,
-        default="",
-        blank=True,
-        verbose_name=_("Age"),
-    )
-    languages = models.CharField(
-        max_length=512,
-        default="",
-        blank=True,
-        verbose_name=_("Languages"),
-    )
-    when_to_call = models.CharField(
+    phone_when = models.CharField(
         max_length=1024,
         default="",
         blank=True,
         verbose_name=_("When to call?"),
-    )
-    living_with_pets = models.CharField(
-        max_length=1024,
-        null=True,
-        blank=True,
-        verbose_name=_("Are there pets in the house?"),
-    )
-    can_take_person_with_pets = models.CharField(
-        max_length=512,
-        null=True,
-        blank=True,
-        verbose_name=_("Can accomodate pets?"),
     )
     costs = models.CharField(
         max_length=1024,
         verbose_name=_("Costs"),
         help_text=_("Costs of stay - rent, fees, rental costs or free stay"),
     )
-    availability = models.DateField(
+    date = models.DateField(
         default=timezone.now,
-        verbose_name=_("Availability"),
-        help_text=_("When can you start providing the accomodation?"),
+        verbose_name=_("Registration date"),
+        help_text=_("When can you start providing the accommodation?"),
     )
-    accommodation_length = models.CharField(
+    how_long = models.CharField(
         max_length=1024,
         verbose_name=_("Accommodation length"),
         help_text=_("For how long can you provide the accomodation?"),
     )
-    details = models.TextField(
-        max_length=2048,
-        verbose_name=_("Details"),
-        help_text=_("A bunch of information about the place - presence of animals, languages spoken by tenants, availability of bed linen and towels, others"),
-    )
-    transport = models.CharField(
-        choices=TransportRange.choices,
-        max_length=16,
-        verbose_name=_("Transport"),
-    )
-    phone_number = models.CharField(
+    phone = models.CharField(
         max_length=128,
+        null=False,
         verbose_name=_("Phone number"),
     )
-    backup_phone_number = models.CharField(
-        max_length=128,
+    food = models.BooleanField(
+        default=False,
+        verbose_name=_("Do you provide food?"),
+    )
+    pets = models.BooleanField(
+        default=False,
+        verbose_name=_("Do you live with pets?"),
+    )
+    can_live_with_pets = models.BooleanField(
+        default=False,
+        verbose_name=_("Can you live with pets?"),
+    )
+    disable = models.BooleanField(
+        default=False,
+        verbose_name=_("Facilities for the disabled"),
+    )
+    transport = models.BooleanField(
+        default=False,
+        verbose_name=_("Do you offer transport"),
+    )
+    transport_desc = models.TextField(
+        max_length=2048,
         default="",
         blank=True,
-        verbose_name=_("Backup phone number"),
-        help_text=_("An additional contact person"),
+        verbose_name=_("Transport"),
     )
-    email = models.EmailField(
-        unique=False,
-        verbose_name=_("Email"),
+    job = models.BooleanField(
+        default=False,
+        verbose_name=_("Do you offer a job"),
+    )
+    job_descr = models.CharField(
+        max_length=1024,
+        default="",
+        blank=True,
+        verbose_name=_("Transport"),
     )
     extra = models.CharField(
         max_length=2048,
@@ -205,16 +222,6 @@ class HousingResource(TimeStampedModel):
         null=True,
         blank=True,
         verbose_name=_("Owner"),
-    )
-    will_pick_up_now = models.BooleanField(
-        default=False,
-        verbose_name=_("Will pick the people up"),
-    )
-    note = models.TextField(
-        max_length=2048,
-        default="",
-        blank=True,
-        verbose_name=_("Note"),
     )
     cherry = models.BooleanField(
         default=False,
@@ -245,7 +252,12 @@ class HousingResource(TimeStampedModel):
         default=generate_token,
         verbose_name=_("Token"),
     )
-
+    note = models.TextField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Note"),
+    )
     objects = HousingResourceManager()
 
     def __str__(self):
@@ -269,7 +281,7 @@ class HousingResource(TimeStampedModel):
 
     @property
     def full_address(self):
-        return f"{self.address} {self.city_and_zip_code}"
+        return f"{self.address} {self.city} {self.country} {self.postal_code}"
 
     @property
     def is_actively_ready(self):
@@ -289,6 +301,22 @@ class HousingResource(TimeStampedModel):
         return sum(points)
 
     @property
+    def resource(self):
+        str_ = ''
+        if self.house:
+            str_+='House '
+        if self.flat:
+            str_+='Flat '
+        if self.room:
+            str_+='Room '
+        if self.sofa:
+            str_+='Sofa'
+        return str_
+
+    def get_resource_display(self):
+        return self.resource
+
+    @property
     def compact_display(self):
         return f"{self.name} {self.get_resource_display()}, {self.full_address}\n{self.extra}"
 
@@ -296,7 +324,7 @@ class HousingResource(TimeStampedModel):
         return dict(
             created=self.created,
             status=self.status,
-            people_count=self.people_to_accommodate,
+            people_count=self.how_many_people,
             day=get_our_today_cutoff(self.created),
         )
 
@@ -305,27 +333,25 @@ class HousingResource(TimeStampedModel):
             id=self.id,
             token=self.token,
             name=self.name,
-            about_info=self.about_info,
-            resource=self.resource,
-            city_and_zip_code=self.city_and_zip_code,
-            city=self.city_and_zip_code.replace(self.zip_code, ""),
-            zip_code=self.zip_code,
+            #resource=self.resource,
+            house=self.house,
+            flat=self.flat,
+            room=self.room,
+            sofa=self.sofa,
+            postal_code=self.postal_code,
+            city=self.city,
             address=self.address,
-            people_to_accommodate=self.people_to_accommodate,
-            age=self.age,
-            languages=self.languages,
-            when_to_call=self.when_to_call,
+            people_to_accommodate=self.how_many_people,
+            when_to_call=self.phone_when,
             costs=self.costs,
-            availability=self.availability,
+            availability=self.date,
             accommodation_length=extract_number_from_string(
-                self.accommodation_length, default=0) or self.accommodation_length,
+                self.how_long, default=0) or self.how_long,
             details=self.details,
-            transport=self.transport,
-            living_with_pets=self.living_with_pets or "",
-            can_take_person_with_pets=self.can_take_person_with_pets or "",
-            phone_number=get_phone_number_display(self.phone_number),
-            backup_phone_number=get_phone_number_display(self.backup_phone_number),
-            email=self.email,
+            transport=self.transport_desc,
+            living_with_pets=self.pets,
+            can_take_person_with_pets=self.can_live_with_pets,
+            phone_number=get_phone_number_display(self.phone),
             extra=self.extra or "",
         )
 
@@ -333,9 +359,8 @@ class HousingResource(TimeStampedModel):
         return dict(
             name=self.name,
             address=self.full_address,
-            phone_number=get_phone_number_display(self.phone_number),
-            note=self.note,
-            will_pick_up_now=self.will_pick_up_now,
+            phone_number=get_phone_number_display(self.phone),
+            will_pick_up_now=self.transport,
             owner=self.owner.as_json() if self.owner else None,
         )
 
@@ -343,36 +368,41 @@ class HousingResource(TimeStampedModel):
         return dict(
             id=self.id,
             name=self.name,
-            about_info=self.about_info,
-            resource=self.resource,
-            city_and_zip_code=self.city_and_zip_code,
-            zip_code=self.zip_code,
+            #resource=self.resource,
+            house=self.house,
+            flat=self.flat,
+            room=self.room,
+            sofa=self.sofa,
+            postal_code=self.postal_code,
+            city=self.city,
+            country=self.country,
             address=self.address,
             full_address=self.full_address,
-            people_to_accommodate=self.people_to_accommodate,
+            people_to_accommodate=self.how_many_people,
+            people_desc=self.people_desc,
             costs=self.costs,
-            availability=self.availability,
-            accommodation_length=self.accommodation_length,
-            details=self.details,
-            transport=self.transport,
-            phone_number=get_phone_number_display(self.phone_number),
-            backup_phone_number=get_phone_number_display(self.backup_phone_number),
-            will_pick_up_now=self.will_pick_up_now,
-            email=self.email,
+            availability=self.date,
+            accommodation_length=self.how_long,
+            disable=self.disable,
+            details=self.description,
+            transport=self.transport_desc,
+            phone_number=get_phone_number_display(self.phone),
+            will_pick_up_now=self.transport,
+            job=self.job,
+            job_descr=self.job_descr,
+            food=self.food,
             extra=self.extra,
             status=self.status,
             cherry=self.cherry,
             turtle=self.turtle,
             verified=self.verified,
-            languages=self.languages,
-            when_to_call=self.when_to_call,
-            living_with_pets=self.living_with_pets,
-            can_take_person_with_pets=self.can_take_person_with_pets,
+            when_to_call=self.phone_when,
+            living_with_pets=self.pets,
+            can_take_person_with_pets=self.can_live_with_pets,
             is_dropped=self.is_dropped,
             is_ready=self.is_actively_ready,
             is_hot=self.is_dropped or self.is_actively_ready,
             hot_sort=self.hot_sort,
-            note=self.note,
             compact_display=self.compact_display,
             owner=self.owner.as_json() if self.owner else None,
         )
@@ -423,7 +453,7 @@ class SubmissionManager(Manager):
             cut_off = now.replace(hour=END_OF_DAY, minute=0, second=0)
         else:
             cut_off = now.replace(day=now.day - 1, hour=END_OF_DAY, minute=0, second=0)
-        return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS).only("people")
+        return self.filter(finished_at__gte=cut_off, status=SubStatus.SUCCESS).only("people_nb")
 
 
 class Submission(TimeStampedModel):
@@ -432,67 +462,167 @@ class Submission(TimeStampedModel):
         null=False,
         verbose_name=_("Full name"),
     )
-    phone_number = models.CharField(
-        max_length=128,
-        verbose_name=_("Phone number"),
+    registration_date = models.DateField(
+        default=timezone.now,
+        verbose_name=_("Registration date"),
     )
-    people = models.CharField(
+    phone_number_pl = models.CharField(
+        null=False,
+        blank=False,
+        default='',
         max_length=128,
+        verbose_name=_("Polish phone number"),
+    )
+    phone_number_ukr = models.CharField(
+        null=True,
+        blank=True,
+        max_length=128,
+        verbose_name=_("Ukrainian phone number"),
+    )
+    people_nb = models.IntegerField(
+        default=1,
         verbose_name=_("The number of people"),
     )
-    how_long = models.CharField(
-        max_length=128,
-        verbose_name=_("Length of stay"),
-        help_text=_("For how long (in days)?"),
-    )
-    description = models.CharField(
+    women = models.TextField(
         max_length=2048,
-        verbose_name=_("Description"),
-        help_text=_("Describe the group, age of every person, "
-            "their relationships (family, friends?), "
-            "indicate whether it can be broken into smaller groups"),
-        )
-    origin = models.CharField(
+        default="",
+        blank=True,
+        verbose_name=_("Women age"),
+    )
+    men = models.TextField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Men age"),
+    )
+    children = models.TextField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Children age"),
+    )
+    city_of_origin = models.CharField(
         max_length=512,
         blank=True,
         default="",
-        verbose_name=_("Nationality"),
+        verbose_name=_("City of your origin"),
     )
-    traveling_with_pets = models.CharField(
+    disable = models.BooleanField(
+        default=False,
+        verbose_name=_("Disabilities"),
+        help_text=("Anyone with a disability or chronic diseases")
+    )
+    disable_desc = models.TextField(
+        max_length=2048,
+        default="",
+        blank=True,
+        verbose_name=_("Kind of disability"),
+    )
+    pregnant = models.BooleanField(
+        default=False,
+        verbose_name=_("Pregnant"),
+    )
+    pet = models.BooleanField(
+        default=False,
+        verbose_name=_("Pets"),
+    )
+    pet_desc = models.TextField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        verbose_name=_("What kind of animal"),
+    )
+    pet_alergic = models.BooleanField(
+        default=False,
+        verbose_name=_("Animal allergies"),
+    )
+    languages_others = models.CharField(
         max_length=1024,
         null=True,
         blank=True,
-        verbose_name=_("Traveling with pets"),
+        verbose_name=_("Other languages"),
+        help_text=_("Other languages that the person speaks besides Polish, Ukrainian and Russian"),
     )
-    can_stay_with_pets = models.CharField(
-        max_length=512,
+    languages_ru = models.BooleanField(
+        default=False,
+        verbose_name=_("Russian"),
+    )
+    languages_pl = models.BooleanField(
+        default=False,
+        verbose_name=_("Polish"),
+    )
+    languages_en = models.BooleanField(
+        default=False,
+        verbose_name=_("English"),
+    )
+    preferred_country = models.CharField(
+        max_length=30,
         null=True,
         blank=True,
-        verbose_name=_("Can stay with pets"),
-        help_text=_("Can the person stay with pets (e.g., due to allergies)?"),
-    )  # does this need a dropdown on the frontend?
-    contact_person = models.CharField(
-        max_length=1024,
+        verbose_name=_("Preferred country"),
+    )
+    preferred_city = models.CharField(
+        max_length=30,
         null=True,
         blank=True,
-        verbose_name=_("Contact person"),
+        verbose_name=_("Preferred city"),
     )
-    languages = models.CharField(
-        max_length=1024,
-        null=True,
-        blank=True,
-        verbose_name=_("Languages"),
-        help_text=_("Languages that the person speaks"),
-    )
-    when = models.DateField(
+    how_long_date = models.DateField(
         default=timezone.now,
         null=True,
         blank=True,
         verbose_name=_("Since when the support is needed"),
     )
-    transport_needed = models.BooleanField(
+    how_long_desc = models.TextField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        verbose_name=_("Description"),
+    )
+    how_long_months = models.IntegerField(
+        default=0,
+        blank=True,
+        verbose_name=_("How many months?"),
+    )
+    how_long_infinite = models.BooleanField(
+        default=False,
+        verbose_name=_("Without ending date"),
+    )
+    can_pay = models.BooleanField(
+        default=False,
+        verbose_name=_("Is the payment possible?"),
+    )
+    can_pay_pln = models.FloatField(
+        default=0,
+        blank=True,
+        max_length=128,
+        verbose_name=_("Monthly payment in PLN"),
+    )
+    cigarettes = models.BooleanField(
+        default=False,
+        verbose_name=_("Does anyone smokes cigarettes?"),
+    )
+    job_needed = models.BooleanField(
+        default=False,
+        verbose_name=_("Do you want to work?"),
+    )
+    job_desc = models.TextField(
+        max_length=2048,
+        null=True,
+        blank=True,
+        verbose_name=_("In what kind of job are you interested in?"),
+    )
+    car = models.BooleanField(
         default=True,
-        verbose_name=_("Transport needed"),
+        verbose_name=_("Do you have a car?"),
+    )
+    stamps = models.BooleanField(
+        default=True,
+        verbose_name=_("Do you have polish border stamps?"),
+    )
+    pesel = models.BooleanField(
+        default=True,
+        verbose_name=_("Do you have polish pesel?"),
     )
     # following fields are for logged in users
     note = models.CharField(
@@ -573,7 +703,7 @@ class Submission(TimeStampedModel):
     objects = SubmissionManager()
 
     def __str__(self):
-        return f"{self.id} {self.name} {self.people} na {self.how_long}"
+        return f"{self.id} {self.name} {self.people_nb} na {self.how_long_months}"
 
     class Meta:
         verbose_name = _("Submission")
@@ -607,12 +737,19 @@ class Submission(TimeStampedModel):
 
     @property
     def people_as_int(self):
-        return extract_number_from_string(self.people, default=1)
+        return extract_number_from_string(self.people_nb, default=1)
 
     @property
     def accomodation_in_the_future(self):
-        if self.when:
-            when = self.when.date() if isinstance(self.when, datetime.datetime) else self.when
+        """
+        Is is assumed that an accommodation is needed from the day of registration
+        """
+        # if self.when:
+        #     when = self.when.date() if isinstance(self.when, datetime.datetime) else self.when
+        #     return when > get_our_today_cutoff()
+        if self.registration_date:
+            when = self.registration_date.date() if isinstance(self.registration_date, datetime.datetime) \
+                else self.registration_date
             return when > get_our_today_cutoff()
         return False
 
@@ -648,8 +785,7 @@ class Submission(TimeStampedModel):
         first_match = self.first_matched_date
         return dict(
             id=self.id,
-            created=self.created.astimezone(timezone.get_default_timezone()),
-            created_hour=self.created.astimezone(timezone.get_default_timezone()).hour,
+            created=self.registration_date,
             status=self.status,
             finished_at=self.finished_at,
             finished_day=get_our_today_cutoff(self.finished_at) if self.finished_at else None,
@@ -682,36 +818,60 @@ class Submission(TimeStampedModel):
         )
         self.save()
 
+    @property
+    def languages(self):
+        str_ = ''
+        if self.languages_ru:
+            str_ += 'Rosyjski '
+        if self.languages_pl:
+            str_ += "Polski "
+        if self.languages_en:
+            str_+= "Angielski "
+        str_ += self.languages_others
+        return str_
+
     def as_prop(self):
-        try:
-            created = self.created.astimezone(timezone.get_default_timezone()).strftime("%-d %B %H:%M:%S")
-        except ValueError:
-            created = str(self.created.astimezone(timezone.get_default_timezone()))
         return dict(
             id=self.id,
-            created=created,
+            created=self.registration_date,
             name=self.name,
-            phone_number=get_phone_number_display(self.phone_number),
-            people=self.people,
-            people_count=str(self.people_as_int),
-            description=self.description,
-            how_long=self.how_long,
-            languages=self.languages,
+            phone_number_pl=get_phone_number_display(self.phone_number_pl),
+            phone_number_ukr=get_phone_number_display(self.phone_number_ukr),
+            people_number=str(self.people_nb),
+            women_age=self.women,
+            man_age=self.men,
+            pregnant=self.pregnant,
+            children_age=self.children,
+            how_long_date=self.how_long_date,
+            how_long_desc=self.how_long_desc,
+            how_long_months=self.how_long_months,
+            how_long_infinite=self.how_long_infinite,
+            languages_ru=self.languages_ru,
+            languages_pl=self.languages_pl,
+            languages_en=self.languages_en,
+            languages_others=self.languages_others,
             source=self.source,
             priority=self.priority,
-            when=self.when,
-            contact_person=self.contact_person,
-            transport_needed=self.transport_needed,
             receiver=self.receiver.as_json() if self.receiver else None,
             coordinator=self.coordinator.as_json() if self.coordinator else None,
             matcher=self.matcher.as_json() if self.matcher else None,
             note=self.note,
             accomodation_in_the_future=self.accomodation_in_the_future,
             status=self.status,
-            origin=self.origin,
-            is_today=get_our_today_cutoff(self.created) >= get_our_today_cutoff(),
-            traveling_with_pets=self.traveling_with_pets,
-            can_stay_with_pets=self.can_stay_with_pets,
+            city_of_origin=self.city_of_origin,
+            disable=self.disable,
+            disable_description=self.disable_desc,
+            traveling_with_pets=self.pet,
+            pets_description=self.pet_desc,
+            pet_alergic=self.pet_alergic,
+            can_pay=self.can_pay,
+            can_pay_pln=self.can_pay_pln,
+            cigarettes=self.cigarettes,
+            job_needed=self.job_needed,
+            job_desc=self.job_desc,
+            car=self.car,
+            stamps=self.stamps,
+            pesel=self.pesel,
             resource=self.resource.sub_representation() if self.resource else None,
         )
 

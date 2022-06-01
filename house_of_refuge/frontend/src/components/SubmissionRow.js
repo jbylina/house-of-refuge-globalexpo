@@ -157,63 +157,117 @@ export function SubmissionRow({sub, activeHandler, user, isGroupCoordinator, isA
         Zwiń / Rozwiń
       </div>
     </div>
-    <Table className="sub-table" style={{'background-color': 'rgba(255, 255, 255, 0.95)', display: collapsed ? 'none' : 'table'}}>
+    <Table className="sub-table" style={{'backgroundColor': 'rgba(255, 255, 255, 0.95)', display: collapsed ? 'none' : 'table'}}>
       <tbody>
       <tr>
         <th>Imie</th>
         <td>{localSub.name}</td>
-        <th>Ile Osób?</th>
-        <td>{localSub.people}</td>
-        <th>Jak dlugo?</th>
+        <th>Miasto pochodzenia</th>
+        <td>{localSub.city_of_origin}</td>
+        <th>Polski numer telefonu</th>
         <td>
-          <EditableField value={localSub.how_long} onRename={
-            (value) => updateSub(localSub, {"how_long": value}, () => setLocalSub((s) => ({...s, how_long: value})))}/>
+          {localSub.phone_number_pl}
+          {/*<EditableField value={localSub.how_long} onRename={*/}
+          {/*  (value) => updateSub(localSub, {"how_long": value}, () => setLocalSub((s) => ({...s, how_long: value})))}/>*/}
         </td>
-        <th>Telefon</th>
-        <td><EditableField
-            value={localSub.phone_number}
-            onRename={(phone) => updateSub(localSub, {"phone_number": phone}, () => setLocalSub(s => ({
-              ...s,
-              phone_number: phone
-            })))}/></td>
+        <th>Ukraiński numer telefony</th>
+        <td>
+          {localSub.phone_number_ukr}
+          {/*<EditableField*/}
+          {/*  value={localSub.phone_number}*/}
+          {/*  onRename={(phone) => updateSub(localSub, {"phone_number": phone}, () => setLocalSub(s => ({*/}
+          {/*    ...s,*/}
+          {/*    phone_number: phone*/}
+          {/*  })))}/>*/}
+        </td>
       </tr>
+
       <tr>
-        <th>Od Kiedy?</th>
-        <td>
-          {statusAsNumber(localSub.status) < 2 ?
-          <input type="date" required min={new Date().toJSON().slice(0, 10)}
-                 value={localSub.when}
-                 onChange={(e) => {
-                   const value = e.target.value;
-
-
-                   if (e && localSub.when !== value) {
-                     updateSub(localSub,
-                         {"when": value},
-                         () => setLocalSub((s) => ({...s, when: value}))
-                     );
-                   }
-                 }}/> : localSub.when}
-        </td>
-        <th>Opis:</th>
-        <td>{localSub.description}</td>
         <th>Języki</th>
-        <td>{localSub.languages}</td>
-        <th>Narodowość</th>
-        <td>{localSub.origin}</td>
+        <td>
+          { [localSub.languages_pl ? 'PL' : '', localSub.languages_en ? 'EN' : '', localSub.languages_ru ? 'RU' : ''].filter(Boolean).join(' / ') }
+          {/*{statusAsNumber(localSub.status) < 2 ?*/}
+          {/*<input type="date" required min={new Date().toJSON().slice(0, 10)}*/}
+          {/*       value={localSub.when}*/}
+          {/*       onChange={(e) => {*/}
+          {/*         const value = e.target.value;*/}
+
+
+          {/*         if (e && localSub.when !== value) {*/}
+          {/*           updateSub(localSub,*/}
+          {/*               {"when": value},*/}
+          {/*               () => setLocalSub((s) => ({...s, when: value}))*/}
+          {/*           );*/}
+          {/*         }*/}
+          {/*       }}/> : localSub.when}*/}
+        </td>
+        <th>Inne języki:</th>
+        <td>{localSub.languages_others}</td>
+        <th>Liczba osób:</th>
+        <td>{localSub.people_number}</td>
+        <th>Kobiety wiek</th>
+        <td>{localSub.women_age}</td>
       </tr>
       <tr>
-        <th>Ma zwierzęta</th>
-        <td>{localSub.traveling_with_pets}</td>
-        <th>Czy może spać ze zwierzętami?</th>
-        <td>{localSub.can_stay_with_pets}</td>
-        <th>Potrzebuje transportu?</th>
-        <td>{localSub.transport_needed ? "tak" : "nie"}</td>
-        <th>Notka</th>
+        <th>Mężczyzni wiek</th>
+        <td>{localSub.man_age}</td>
+        <th>Dzieci wiek</th>
+        <td>{localSub.children_age}</td>
+        <th>Niepełnosprawni</th>
         <td>
-          <EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/>
+          { localSub.disable ? "TAK, " + localSub.disable_description : "NIE" }
+        </td>
+        <th>Czy ktoś w ciąży</th>
+        <td>
+          { localSub.pregnant ? 'TAK' : 'NIE' }
+          {/*<EditableField value={note} onRename={(note) => updateSub(localSub, {"note": note}, () => setNote(note))}/>*/}
         </td>
       </tr>
+      <tr>
+        <th>Zwierzę</th>
+        <td>{localSub.traveling_with_pets ? "TAK, " + localSub.pets_description : "NIE" }</td>
+        <th>Alergia na zwierzęta</th>
+        <td>{localSub.pet_alergic ? 'TAK' : 'NIE'}</td>
+        <th>Preferowany kraj</th>
+        <td>
+          { localSub.preferred_country }
+        </td>
+        <th>Preferowane miasto</th>
+        <td>
+          { localSub.preferred_city }
+        </td>
+      </tr>
+      <tr>
+        <th>Na jak długo (opis)</th>
+        <td>{ localSub.how_long_desc }</td>
+        <th>Na jak długo (data)</th>
+        <td>{ localSub.how_long_date }</td>
+        <th>Na jak długo (liczba miesięcy)</th>
+        <td>{ localSub.how_long_months }</td>
+        <th>Bez terminu</th>
+        <td>{ localSub.how_long_infinite ? 'TAK' : 'NIE' }</td>
+      </tr>
+      <tr>
+        <th>Czy może płacić</th>
+        <td>{ localSub.can_pay ? 'TAK' : 'NIE' }</td>
+        <th>Ile może płacić (PLN)</th>
+        <td>{ localSub.can_pay_pln }</td>
+        <th>Czy pali papierosy</th>
+        <td>{ localSub.cigarettes ? 'TAK' : 'NIE' }</td>
+        <th>Potrzebna praca</th>
+        <td>{ localSub.job_needed ? 'TAK' : 'NIE' }</td>
+      </tr>
+      <tr>
+        <th>Jaki rodzaj pracy</th>
+        <td>{ localSub.job_desc }</td>
+        <th>Samochód</th>
+        <td>{ localSub.car ? 'TAK' : 'NIE' }</td>
+        <th>Pieczątki wjazdu do Polski</th>
+        <td>{ localSub.stamps ? 'TAK' : 'NIE' }</td>
+        <th>PESEL</th>
+        <td>{ localSub.pesel ? 'TAK' : 'NIE' }</td>
+      </tr>
+
       {localSub.resource && <tr className="tr-host">
         <th>HOST</th>
         <td>{localSub.resource.name}</td>

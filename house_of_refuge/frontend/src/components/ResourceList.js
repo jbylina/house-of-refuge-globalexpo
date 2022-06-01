@@ -70,13 +70,13 @@ export const ResourceList = ({initialResources, sub, subHandler, user, clearActi
   }, [page]);
 
   const [columnsData] = useState({
-    name: {fieldName: 'name', display: "Imie", emoji: "👱", sort: "asc"},
-    address: {fieldName: 'address', display: "Adres", emoji: "🏘", sort: "asc"},
-    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Ilu ludzi?", emoji: "👨‍👩‍👧‍👦", sort: "asc"},
-    accommodation_length: {fieldName: 'accommodation_length', display: "Na jak długo?", emoji: "🕙", sort: "asc"},
-    resource: {fieldName: 'resource', display: "Zasób", emoji: "🛏", sort: "asc"},
-    availability: {fieldName: 'availability', display: "Od kiedy?", emoji: "📆", sort: "asc"},
-    status: {fieldName: 'hot_sort', display: "Gorącość", emoji: "🌡", sort: "desc"},
+    availability: {fieldName: 'availability', display: "Dostępność", emoji: "", sort: "asc"},
+    accommodation_length: {fieldName: 'accommodation_length', display: "Długość pobytu", emoji: "", sort: "asc"},
+    city: {fieldName: 'city', display: "Miasto", emoji: "", sort: "asc"},
+    people_to_accommodate: {fieldName: 'people_to_accommodate', display: "Liczba osób", emoji: "", sort: "asc"},
+    food: {fieldName: 'food', display: "Wyżywienie", emoji: "", sort: "asc"},
+    transport: {fieldName: 'transport', display: "Transport", emoji: "", sort: "asc"},
+    status: {fieldName: 'hot_sort', display: "Gorącość", emoji: "", sort: "desc"},
   });
 
   const matchFound = (resource, payload) => {

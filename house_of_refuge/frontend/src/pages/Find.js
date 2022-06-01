@@ -39,8 +39,6 @@ const Find = ({user}) => {
                         validationSchema={validationSchema2}
                         url="/api/zglos"
                         successInfo="Дякуємо за подання."
-                        localeNamespace='fields2'
-                        fixedLocale="ua"
                         user={user}
                         canAddMore={true}
                     /> :
