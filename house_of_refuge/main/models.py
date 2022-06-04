@@ -737,7 +737,7 @@ class Submission(TimeStampedModel):
 
     @property
     def people_as_int(self):
-        return extract_number_from_string(self.people_nb, default=1)
+        return self.people_nb
 
     @property
     def accomodation_in_the_future(self):
