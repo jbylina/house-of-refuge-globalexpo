@@ -261,7 +261,7 @@ class HousingResource(TimeStampedModel):
     objects = HousingResourceManager()
 
     def __str__(self):
-        return f"{self.id} {self.name} {self.phone_number} {self.full_address} {self.pk}"
+        return f"{self.id} {self.name} {self.full_address} {self.pk}"
 
     class Meta:
         verbose_name = _("Resource")
